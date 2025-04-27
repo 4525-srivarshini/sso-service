@@ -14,7 +14,8 @@ public class User {
     private String name;
     private String email;
     private String mobile;
-    private String password; // Hashed
+    private String password;
     private String tenantId;
     private boolean isVerified;
+    private String resetToken;
 }
