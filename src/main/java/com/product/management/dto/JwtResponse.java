@@ -1,4 +1,4 @@
-package com.product.management.entity;
+package com.product.management.dto;
 
 import lombok.Data;
 

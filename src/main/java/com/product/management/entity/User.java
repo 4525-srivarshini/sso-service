@@ -1,21 +1,32 @@
 package com.product.management.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.UUID;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "auth_users")
 @Getter
 @Setter
 public class User {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
     private String name;
     private String email;
-    private String mobile;
     private String password;
-    private String tenantId;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;  // Many users can have the same role
+
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", referencedColumnName = "id")
+    private Tenant tenant;  // Many users can belong to the same tenant
+
+    private boolean isActive;
     private boolean isVerified;
-    private String resetToken;
 }

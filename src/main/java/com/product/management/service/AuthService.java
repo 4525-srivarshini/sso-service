@@ -1,18 +1,11 @@
 package com.product.management.service;
 
-import com.product.management.entity.*;
-
-import java.util.UUID;
+import com.product.management.dto.*;
+import com.product.management.entity.Tenant;
+import java.util.List;
 
 public interface AuthService {
-
+    public void register(RegisterRequest request);
     public JwtResponse login(LoginRequest request);
-
     public JwtResponse refresh(RefreshTokenRequest request);
-
-    public void forgotPassword(ForgotPasswordRequest request);
-
-    public void resetPassword(ResetPasswordRequest request);
-
-    public UserProfileResponse me(String email);
 }
