@@ -2,6 +2,8 @@ package com.product.management.service;
 
 import com.product.management.dto.*;
 import com.product.management.entity.*;
+import com.product.management.exceptions.InvalidCredentialsException;
+import com.product.management.exceptions.ResourceNotFoundException;
 import com.product.management.repository.RoleRepository;
 import com.product.management.repository.TenantRepository;
 import com.product.management.repository.UserRepository;
@@ -29,10 +31,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void register(RegisterRequest request) {
         Role role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new RuntimeException("Invalid role ID"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         Tenant tenant = tenantRepository.findById(request.getTenantId())
-                .orElseThrow(() -> new RuntimeException("Invalid tenant ID"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tenant not found"));
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("User already exists with this email");
@@ -54,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String accessToken = jwtService.generateToken(user);
