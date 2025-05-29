@@ -30,10 +30,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/login",
-                                "/api/auth/register",
-                                "/api/auth/refresh",
-                                "/api/public/tenants/**"
+                                "/api/auth/refresh"
+
                         ).permitAll()
+                        .requestMatchers("/api/auth/register/**").hasAnyRole("SUPER_ADMIN", "COLLEGE_ADMIN")
+                        .requestMatchers("/api/public/tenants/**").hasAnyRole("SUPER_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

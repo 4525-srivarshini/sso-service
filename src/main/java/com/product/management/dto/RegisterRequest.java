@@ -24,6 +24,5 @@ public class RegisterRequest {
     @NotNull(message = "Role ID is required")
     private int roleId;
 
-    @NotNull(message = "Tenant ID is required")
     private UUID tenantId;
 }
