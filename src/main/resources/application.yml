@@ -1,11 +1,12 @@
-server:
-  port: 8080
-
 spring:
+  server:
+    port: 8080
+  banner:
+      location: /static/banner.txt
   datasource:
-    url: jdbc:mysql://localhost:3306/sso_db
+    url: jdbc:mysql://localhost:3306/EduBox
     username: root
-    password: Santosh@22124
+    password: Varshini@29
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
