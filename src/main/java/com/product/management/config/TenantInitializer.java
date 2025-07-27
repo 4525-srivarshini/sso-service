@@ -19,12 +19,10 @@ public class TenantInitializer {
     }
 
     private void createTenantIfNotExists(String name, String subdomain) {
-        if (!tenantRepository.existsBySubdomain(subdomain)) {
             Tenant tenant = new Tenant();
             tenant.setName(name);
             tenant.setSubdomain(subdomain);
             tenantRepository.save(tenant);
             System.out.println("Initialized tenant: " + name + " (" + subdomain + ")");
-        }
     }
 }

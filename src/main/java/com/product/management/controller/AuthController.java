@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -41,10 +42,7 @@ public class AuthController {
         }
         try {
             List<RegisterRequest> users = ExcelHelper.excelToRegisterRequests(file.getInputStream());
-
-            // Use your existing bulk register method here
             authService.registerBulk(users);
-
             return ResponseEntity.ok("All users registered successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

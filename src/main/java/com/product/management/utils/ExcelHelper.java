@@ -44,7 +44,7 @@ public class ExcelHelper {
 
                 String tenantIdStr = getCellValueAsString(currentRow.getCell(4));
                 if (tenantIdStr != null && !tenantIdStr.isEmpty()) {
-                    request.setTenantId(UUID.fromString(tenantIdStr));
+                    request.setTenantId(Long.parseLong(tenantIdStr));
                 } else {
                     request.setTenantId(null);
                 }

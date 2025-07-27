@@ -42,12 +42,10 @@ public class AuthServiceImpl implements AuthService {
         String currentRole = auth.getAuthorities().iterator().next().getAuthority();
 
 
-        // Restrict college admin from creating super admins
         if (currentRole.equals("ROLE_COLLEGE_ADMIN") && RoleConstants.SUPER_ADMIN.equals(role.getName())) {
             throw new ForbiddenException("COLLEGE_ADMIN is not allowed to register SUPER_ADMINs");
         }
 
-        // SUPER_ADMIN should not have tenantId
         if (RoleConstants.SUPER_ADMIN.equals(role.getName()) && request.getTenantId() != null) {
             throw new BadRequestException("SUPER_ADMIN should not have a tenant ID");
         }

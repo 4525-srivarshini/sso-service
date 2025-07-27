@@ -29,15 +29,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/login",
+                                "/api/auth/**",
                                 "/api/auth/refresh",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
 
                         ).permitAll()
-                        .requestMatchers("/api/auth/register/**").hasAnyRole("SUPER_ADMIN", "COLLEGE_ADMIN")
-                        .requestMatchers("/api/public/tenants/**").hasAnyRole("SUPER_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
