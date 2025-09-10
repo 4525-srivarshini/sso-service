@@ -9,4 +9,9 @@ public interface AuthService {
     public List<String> registerBulk(List<RegisterRequest> requests);
     public JwtResponse login(LoginRequest request);
     public JwtResponse refresh(RefreshTokenRequest request);
+
+    void forgotPassword(String email);
+
+    void resetPassword(String token, String newPassword);
+
 }

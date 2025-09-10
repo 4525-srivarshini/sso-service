@@ -16,9 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
@@ -33,6 +36,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private EmailService emailService;
+
 
     @Override
     public void register(RegisterRequest request) {
@@ -112,5 +119,55 @@ public class AuthServiceImpl implements AuthService {
         String newAccessToken = jwtService.generateToken(user);
         return new JwtResponse(newAccessToken, request.getRefreshToken());
     }
-    
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        user.setTokenExpiration(LocalDateTime.now().plusHours(1));
+
+        userRepository.save(user);
+
+        // For now, just print the token; later, send it via email
+        System.out.println("Reset token for user " + email + ": " + token);
+
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+
+        String subject = "Password Reset Request";
+        String message = "Hello " + user.getName() + ",\n\n" +
+                "To reset your password, click the link below:\n" + resetLink +
+                "\n\nThis link will expire in 1 hour.";
+
+        emailService.sendSimpleMessage(user.getEmail(), subject, message);
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new BadRequestException("Token cannot be empty");
+        }
+        if (newPassword == null || newPassword.length() < 8) {
+            throw new BadRequestException("Password must be at least 8 characters");
+        }
+
+        User user = userRepository.findByResetToken(token);
+        if (user == null) {
+            throw new InvalidCredentialsException("Invalid token");
+        }
+
+        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Token expired, please request a new password reset");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setTokenExpiration(null);
+
+        userRepository.save(user);
+    }
+
+
 }

@@ -3,6 +3,8 @@ package com.product.management.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -26,7 +28,9 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "tenant_id", referencedColumnName = "id")
     private Tenant tenant;  // Many users can belong to the same tenant
-
     private boolean isActive;
     private boolean isVerified;
+    private String resetToken;
+
+    private LocalDateTime tokenExpiration;
 }
